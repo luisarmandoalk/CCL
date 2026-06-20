@@ -1,0 +1,6 @@
+@CCL.Backend_HostAddress = http://localhost:5275
+
+GET {{CCL.Backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

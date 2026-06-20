@@ -1,0 +1,94 @@
+<div class="page">
+  <div class="header">
+    <div>
+      <h1>CCL Inventario</h1>
+      <div>Registro básico de entradas, salidas y consulta de stock.</div>
+    </div>
+    <div class="actions" *ngIf="autenticado">
+      <button class="secondary" type="button" (click)="cargarInventario()">Actualizar</button>
+      <button class="danger" type="button" (click)="cerrarSesion()">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <div class="panel" *ngIf="!autenticado">
+    <h2>Login</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <div class="row">
+        <div>
+          <label for="usuario">Usuario</label>
+          <input id="usuario" type="text" formControlName="usuario">
+          <div class="error-text" *ngIf="loginForm.get('usuario')?.invalid && loginForm.get('usuario')?.touched">
+            El usuario es obligatorio.
+          </div>
+        </div>
+        <div>
+          <label for="clave">Clave</label>
+          <input id="clave" type="password" formControlName="clave">
+          <div class="error-text" *ngIf="loginForm.get('clave')?.invalid && loginForm.get('clave')?.touched">
+            La clave es obligatoria.
+          </div>
+        </div>
+      </div>
+      <div class="actions" style="margin-top: 12px;">
+        <button class="primary" type="submit" [disabled]="cargando">Entrar</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="panel" *ngIf="autenticado">
+    <h2>Movimiento de productos</h2>
+    <form [formGroup]="movimientoForm" (ngSubmit)="registrarMovimiento()">
+      <div class="row-3">
+        <div>
+          <label for="nombre">Producto</label>
+          <input id="nombre" type="text" formControlName="nombre">
+          <div class="error-text" *ngIf="movimientoForm.get('nombre')?.invalid && movimientoForm.get('nombre')?.touched">
+            El nombre es obligatorio.
+          </div>
+        </div>
+        <div>
+          <label for="cantidad">Cantidad</label>
+          <input id="cantidad" type="number" formControlName="cantidad" min="1">
+          <div class="error-text" *ngIf="movimientoForm.get('cantidad')?.invalid && movimientoForm.get('cantidad')?.touched">
+            La cantidad debe ser mayor que cero.
+          </div>
+        </div>
+        <div>
+          <label for="tipo">Tipo</label>
+          <select id="tipo" formControlName="tipo">
+            <option value="entrada">Entrada</option>
+            <option value="salida">Salida</option>
+          </select>
+        </div>
+      </div>
+      <div class="actions" style="margin-top: 12px;">
+        <button class="primary" type="submit" [disabled]="cargando">Registrar</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="panel" *ngIf="autenticado">
+    <h2>Inventario</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Nombre</th>
+          <th>Cantidad</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let producto of inventario">
+          <td>{{ producto.id }}</td>
+          <td>{{ producto.nombre }}</td>
+          <td>{{ producto.cantidad }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="message" [class.error]="esError" [class.success]="!esError && mensaje !== ''" *ngIf="mensaje !== ''">
+    {{ mensaje }}
+  </div>
+</div>
+
